@@ -17,13 +17,15 @@ initData = [[8, 0, 0, 9, 3, 0, 0, 0, 2],
 archie = Grid(initData)
 
 known = 0
+solution = [[0 for i in range(archie.length)] for j in range(archie.length)]
+
 for i in range(9):
     for j in range(9):
         if hasattr(archie.grid[i][j], 'known'):
-            #known += 1
-            print("1")
+            solution[i][j] = archie.grid[i][j].known
+            known += 1
 
 print('known:', known)
 print('unknown:', 81-known)
-
-print(archie.grid[4][3].known)
+for i in range(len(solution)):
+    print(solution[i][:])

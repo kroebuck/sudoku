@@ -82,13 +82,61 @@ class Grid:
     def grid_sweep(self):
         """Run box_check and element_options_check. If known was found, return True."""
         known_update = False
+
         for i in range(self.length):
+            self.box_row_check(i)
+            self.box_column_check(i)
+            row_result = self.row_check(i)
+            column_result = self.column_check(i)
             box_result = self.box_check(i)
             for j in range(self.length):
-                element_options_result = self.element_options_check(i, j)
-                if box_result or element_options_result:
+                element_result = self.element_check(i, j)
+                if element_result:
                     known_update = True
+            if box_result or row_result or column_result:
+                known_update = True
+
         return known_update
+
+    def box_row_check(self, box_number):
+        values = [0 for i in range(self.length)]
+        row_flag = [0 for i in range(3)]
+        row_start = 3 * math.floor(box_number / 3)
+        column_start = 3 * (box_number % 3)
+
+        for i in range(len(values)):
+            for j in range(row_start, row_start + 3):
+                for k in range(column_start, column_start + 3):
+                    if not hasattr(self.grid[j][k], 'known'):
+                        if self.grid[j][k].options[i] == 1:
+                            values[i] += 1
+                if values[i] > 1:
+                    row_flag[j-row_start] = 1
+            if row_flag.count(1) == 1:
+                row_number = row_flag.index(1)+row_start
+                for j in range(row_start, row_start + 3):
+                    if not j == row_number:
+                        self.row_options_update(row_number, i)
+
+    def box_column_check(self, box_number):
+        values = [0 for i in range(self.length)]
+        column_flag = [0 for i in range(3)]
+        row_start = 3 * math.floor(box_number / 3)
+        column_start = 3 * (box_number % 3)
+
+        for i in range(len(values)):
+            for j in range(column_start, column_start + 3):
+                for k in range(row_start, row_start + 3):
+                    if not hasattr(self.grid[j][k], 'known'):
+                        if self.grid[j][k].options[i] == 1:
+                            values[i] += 1
+                if values[i] > 1:
+                    column_flag[j-column_start] = 1
+            if column_flag.count(1) == 1:
+                column_number = column_flag.index(1)+column_start
+                for j in range(column_start, column_start + 3):
+                    if not j == column_number:
+                        self.column_options_update(column_number, i)
 
     def box_check(self, box_number):
         """Check if, in a box, only one option appears. If so, set to known."""
@@ -96,10 +144,10 @@ class Grid:
         row_start = 3 * math.floor(box_number / 3)
         column_start = 3 * (box_number % 3)
 
-        for i in range(row_start, row_start + 3):
-            for j in range(column_start, column_start + 3):
-                if not hasattr(self.grid[i][j], 'known'):
-                    for k in range(len(values)):
+        for k in range(len(values)):
+            for i in range(row_start, row_start + 3):
+                for j in range(column_start, column_start + 3):
+                    if not hasattr(self.grid[i][j], 'known'):
                         if self.grid[i][j].options[k] == 1:
                             values[k] += 1
 
@@ -113,7 +161,49 @@ class Grid:
                                 print('box check update')
                                 return True
 
-    def element_options_check(self, i, j):
+    def row_check(self, row_number):
+        """Check if an option appears only once in a given row. If so, set to known."""
+        values = [0 for i in range(self.length)]
+        known_flag = False
+
+        for i in range(len(values)):
+            for j in range(self.length):
+                if not hasattr(self.grid[row_number][j], 'known'):
+                    if self.grid[row_number][j].options[i] == 1:
+                        values[i] += 1
+
+        for i in range(len(values)):
+            if values[i] == 1:
+                for j in range(self.length):
+                    if not hasattr(self.grid[row_number][j], 'known'):
+                        if self.grid[row_number][j].options[i] == 1:
+                            self.grid[row_number][j].known = i
+                            known_flag = True
+
+        return known_flag
+
+    def column_check(self, column_number):
+        """Check if an option appears only once in a given column. If so, set to known."""
+        values = [0 for i in range(self.length)]
+        known_flag = False
+
+        for i in range(len(values)):
+            for j in range(self.length):
+                if not hasattr(self.grid[j][column_number], 'known'):
+                    if self.grid[j][column_number].options[i] == 1:
+                        values[i] += 1
+
+        for i in range(len(values)):
+            if values[i] == 1:
+                for j in range(self.length):
+                    if not hasattr(self.grid[j][column_number], 'known'):
+                        if self.grid[j][column_number].options[i] == 1:
+                            self.grid[j][column_number].known = i
+                            known_flag = True
+
+        return known_flag
+
+    def element_check(self, i, j):
         """Check if an element has only one possible option. If so, set it as known."""
         if not hasattr(self.grid[i][j], 'known'):
             if self.grid[i][j].options.count(1) == 1:
