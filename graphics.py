@@ -18,7 +18,7 @@ class Graphics:
             for j in range(len(self.values)):
                 temp = Entry(parent)
                 temp.grid(row=i, column=j)
-                temp.config(width=2, justify=CENTER)
+                temp.config(width=2, justify=CENTER, font="Helvetica 35 bold")
                 self.entries.append(temp)
 
     def button_press(self):
