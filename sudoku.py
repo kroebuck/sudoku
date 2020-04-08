@@ -21,12 +21,12 @@ init_data = main.values
 #             [0, 3, 0, 0, 0, 0, 5, 0, 0],
 #             [5, 0, 0, 0, 6, 2, 0, 0, 8]]
 
-puzzle = Grid(main.values, int(side_length/3))
-
-if puzzle.grid_validate():
-    sweep_count = 0
-    while puzzle.grid_sweep():
-        sweep_count += 1
-
-    puzzle.output_solution()
-    puzzle.grid_validate()
+# puzzle = Grid(main.values, int(side_length/3))
+#
+# if puzzle.grid_validate():
+#     sweep_count = 0
+#     while puzzle.grid_sweep():
+#         sweep_count += 1
+#
+#     puzzle.output_solution()
+#     puzzle.grid_validate()
