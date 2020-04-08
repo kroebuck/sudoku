@@ -3,6 +3,7 @@ from gridelement import GridElement
 
 
 class Grid:
+    """Takes in a sudoku puzzle to be solved."""
     def __init__(self, init_data, box_size):
         self.valid = True
         self.length = len(init_data)
@@ -10,6 +11,7 @@ class Grid:
         self.grid = [[GridElement(init_data[j][i], self.box_size) for i in range(self.length)] for j in range(self.length)]
 
     def grid_validate(self):
+        """Checks if grid abides by sudoku rules."""
         print('Validating grid...')
         for i in range(self.length):
             result_row = self.row_validate(i)
