@@ -1,4 +1,4 @@
-class GridElement:
+class Square:
     """Information about squares on the grid to be solved."""
     def __init__(self, element, box_size):
         if element == 0:

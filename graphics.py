@@ -1,6 +1,6 @@
 from tkinter import *
 import math
-from grid import Grid
+from sudoku import Sudoku
 
 
 class Graphics:
@@ -10,7 +10,7 @@ class Graphics:
         self.values = [[0 for i in range(size)] for j in range(size)]
         self.entries = []
         self.create_grid(parent)
-        self.button_solve = Button(parent, text="Solve", command=self.button_solve_press)
+        self.button_solve = Button(parent, text='Solve', command=self.button_solve_press)
         self.button_solve.grid(row=len(self.values), columnspan=len(self.values))
 
     def create_grid(self, parent):
@@ -21,9 +21,9 @@ class Graphics:
                 temp.grid(row=i, column=j)
                 box_number = box_size * math.floor(i/box_size) + math.floor(j/box_size)
                 if box_number % 2:
-                    temp.config(width=2, justify=CENTER, font="Helvetica 35 bold", bg="#d9d9d9")
+                    temp.config(width=2, justify=CENTER, font='Helvetica 35 bold', bg='#d9d9d9')
                 else:
-                    temp.config(width=2, justify=CENTER, font="Helvetica 35 bold")
+                    temp.config(width=2, justify=CENTER, font='Helvetica 35 bold')
                 self.entries.append(temp)
 
     def button_solve_press(self):
@@ -35,7 +35,7 @@ class Graphics:
         self.run_grid()
 
     def run_grid(self):
-        puzzle = Grid(self.values, int(self.size / 3))
+        puzzle = Sudoku(self.values, int(self.size / 3))
 
         if puzzle.grid_validate():
             sweep_count = 0
@@ -51,5 +51,4 @@ class Graphics:
                 self.entries[index].delete(0, END)
                 self.entries[index].insert(0, puzzle.grid[i][j].known)
                 if not puzzle.grid[i][j].original:
-                    self.entries[index].config(fg="#534aff")
-
+                    self.entries[index].config(fg='#534aff')
